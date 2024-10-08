@@ -38,19 +38,24 @@ public class OldPhone
         return string.IsNullOrEmpty(str) ? "" : str.Substring(0, str.Length - 1);
     }
 
+    private bool isFoundDigitBefore(char lastDigit)
+    {
+        return lastDigit != '\0';
+    }
+
     public string OldPhonePad(string input)
     {
         string result = "";
         char lastDigit = '\0';
         int pressCount = 0;
-        foreach (char ch in input)
+        foreach (char currentChr in input)
         {
-            switch (ch)
+            switch (currentChr)
             {
                 case '#':
                     break;
                 case '*':
-                    if (lastDigit != '\0')
+                    if (isFoundDigitBefore(lastDigit))
                     {
                         lastDigit = '\0';
                         pressCount = 0;
@@ -61,7 +66,7 @@ public class OldPhone
                     }
                     break;
                 case ' ':
-                    if (lastDigit == '\0') continue;
+                    if (!isFoundDigitBefore(lastDigit)) continue;
                     else
                     {
                         result += getCharacterFromDigit(lastDigit, pressCount);
@@ -70,17 +75,17 @@ public class OldPhone
                     pressCount = 0;
                     break;
                 default:
-                    if (char.IsDigit(ch))
+                    if (char.IsDigit(currentChr))
                     {
-                        if (lastDigit != '\0' && lastDigit != ch)
+                        if (isFoundDigitBefore(lastDigit) && lastDigit != currentChr)
                         {
                             result += getCharacterFromDigit(lastDigit, pressCount);
-                            lastDigit = ch;
+                            lastDigit = currentChr;
                             pressCount = 1;
                         }
                         else
                         {
-                            lastDigit = ch;
+                            lastDigit = currentChr;
                             pressCount += 1;
                         }
                     }
@@ -107,7 +112,7 @@ class Program
         // Test cases
         Console.WriteLine($"OldPhonePad(\"227*#\") => {oldPhone.OldPhonePad("227*#")}"); // Output: B
         Console.WriteLine($"OldPhonePad(\"8 88777444666*664#\") => {oldPhone.OldPhonePad("8 88777444666*664#")}"); // Output: TURING
-        Console.WriteLine($"OldPhonePad(\"9999 9999 9999 9999#\") => {oldPhone.OldPhonePad("9999 9999 9999 9999#")}"); // Output: WWWW
+        Console.WriteLine($"OldPhonePad(\"9999 9999 9999 9999#\") => {oldPhone.OldPhonePad("9999 9999 9999 9999#")}"); // Output: ZZZZ
         Console.WriteLine($"OldPhonePad(\"23456789#\") => {oldPhone.OldPhonePad("23456789#")}"); // Output: ADGJMPTW
         Console.WriteLine($"OldPhonePad(\"***   #\") => {oldPhone.OldPhonePad("***   #")}"); // Output:
         Console.WriteLine($"OldPhonePad(\"***   2#\") => {oldPhone.OldPhonePad("***   2#")}"); // Output: A
