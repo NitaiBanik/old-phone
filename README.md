@@ -3,7 +3,8 @@
 This is a C# implementation of an old mobile phone keypad simulator.
 
 - Converts sequences of digit presses into corresponding letters.
-- Supports special operations like backspace (`*`) and last digit of input as (`#`)
+- Supports special characters like backspace (`*`) and last digit of input as (`#`)
+- (`#`) will be last character which defines `send`
 
 ## Here is the keypad mapping
 

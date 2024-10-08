@@ -20,7 +20,7 @@ public class OldPhone
         };
     }
 
-    private char getCharacterFromDigit(char digit, int pressCount)
+    private char GetCharacterFromDigit(char digit, int pressCount)
     {
         //Console.WriteLine(digit);
         //Console.WriteLine(pressCount);
@@ -33,19 +33,19 @@ public class OldPhone
         return digitToCharacters[digit][pressCount];
     }
 
-    private string popBack(string str)
+    private string RemoveLastCharacter(string str)
     {
         return string.IsNullOrEmpty(str) ? "" : str.Substring(0, str.Length - 1);
     }
 
-    private bool isFoundDigitBefore(char lastDigit)
+    private bool IsDigitPreviouslyPressed(char lastDigit)
     {
         return lastDigit != '\0';
     }
 
     public string OldPhonePad(string input)
     {
-        string result = "";
+        string result = string.Empty;
         char lastDigit = '\0';
         int pressCount = 0;
         foreach (char currentChr in input)
@@ -53,23 +53,28 @@ public class OldPhone
             switch (currentChr)
             {
                 case '#':
-                    break;
+                    // # is the send button which will be added at the end of the string
+                    if (lastDigit != '\0')
+                    {
+                        result += getCharacterFromDigit(lastDigit, pressCount);
+                    }
+                    return result;
                 case '*':
-                    if (isFoundDigitBefore(lastDigit))
+                    if (IsDigitPreviouslyPressed(lastDigit))
                     {
                         lastDigit = '\0';
                         pressCount = 0;
                     }
                     else
                     {
-                        result = popBack(result);
+                        result = RemoveLastCharacter(result);
                     }
                     break;
                 case ' ':
-                    if (!isFoundDigitBefore(lastDigit)) continue;
+                    if (!IsDigitPreviouslyPressed(lastDigit)) continue;
                     else
                     {
-                        result += getCharacterFromDigit(lastDigit, pressCount);
+                        result += GetCharacterFromDigit(lastDigit, pressCount);
                     }
                     lastDigit = '\0';
                     pressCount = 0;
@@ -77,9 +82,9 @@ public class OldPhone
                 default:
                     if (char.IsDigit(currentChr))
                     {
-                        if (isFoundDigitBefore(lastDigit) && lastDigit != currentChr)
+                        if (IsDigitPreviouslyPressed(lastDigit) && lastDigit != currentChr)
                         {
-                            result += getCharacterFromDigit(lastDigit, pressCount);
+                            result += GetCharacterFromDigit(lastDigit, pressCount);
                             lastDigit = currentChr;
                             pressCount = 1;
                         }
@@ -92,13 +97,6 @@ public class OldPhone
                     break;
             }
         }
-
-        // Process any remaining digit at the end of input
-        if (lastDigit != '\0')
-        {
-            result += getCharacterFromDigit(lastDigit, pressCount);
-        }
-
         return result;
     }
 }
